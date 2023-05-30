@@ -3,7 +3,12 @@ A = [['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.',
 scores = {}
 
 def read_file():
-	f = open("scoreboard.txt", "r")
+	try:
+		f = open("scoreboard.txt", "r")
+	except:
+		f = open("scoreboard.txt", "w")
+		f.close()
+		return
 	for s in f:
 		name = ''; scor = ''; i =0
 		while i < len(s):
@@ -54,6 +59,25 @@ def save_move(p, c):
 	A[i][c] = symbol
 #	print('symbol = ', symbol)
 	return i
+
+def save_draft_move(table, p, c):
+	symbol = ''
+	if p == 1:
+		symbol = 'X'
+	else:
+		symbol = 'O'
+	i = 1
+	while True:
+		i += 1
+		if table[i][c] != '.':
+			i -= 1
+			break
+		if i == 7:
+			break
+#	print('A[', i, '][', c, '] = ', table[i][c])
+	table[i][c] = symbol
+#	print('symbol = ', symbol)
+	return (table, i)
 
 
 def print_grid():
@@ -109,6 +133,31 @@ def is_game_over(r, c, player):
 def is_tie():
 	return (A[1][1] != '.') and (A[1][2] != '.') and (A[1][3] != '.') and (A[1][4] != '.') and (A[1][5] != '.') and (A[1][6] != '.') and (A[1][7] != '.')
 
+
+def find_cpu_move(dif_level):
+	count = [0,0,0,0,0,0,0]
+	if dif_level == "EASY":
+		n = 20
+	elif dif_level == "NORMAL":
+		n = 50
+	elif dif_level == "HARD":
+		n = 100
+	elif dif_level == "CRUSHING":
+		n = 300
+
+	for i in range(7):
+		for j in range(n):
+			c = i;
+			winner = "NULL"
+			while winner == "NULL":
+				print()
+				if is_game_over(r,c,player):
+					winner = player;
+					count[i] += 1
+				elif is_tie():
+					winner = 0;
+					count[i] += 0.5
+
 playing = True
 winner = 0; loser = 0
 
@@ -146,11 +195,11 @@ while playing:
 			if c < 8 and c > 0 and A[1][c] == '.':
 				flag = True
 		while flag == False:
-				c = input('Invalid choice, please pick again ')
-				if c.isnumeric():
-					c = int(c)
-					if c < 8 and c > 0 and A[1][c] == '.':
-						flag = True
+			c = input('Invalid choice, please pick again ')
+			if c.isnumeric():
+				c = int(c)
+				if c < 8 and c > 0 and A[1][c] == '.':
+					flag = True
 		
 		r = save_move(player, c)
 		if is_game_over(r,c, player):
