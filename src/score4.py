@@ -1,9 +1,18 @@
-A = [['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.']]
+import random
+import copy
 
+A = [['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.']]
 scores = {}
 
+vs_computer = False; dif_level = "NONE"
+
 def read_file():
-	f = open("scoreboard.txt", "r")
+	try:
+		f = open("scoreboard.txt", "r")
+	except:
+		f = open("scoreboard.txt", "w")
+		f.close()
+		return
 	for s in f:
 		name = ''; scor = ''; i =0
 		while i < len(s):
@@ -27,6 +36,7 @@ def print_scoreboard():
 	for d in scores:
 		print(d + ' ' + str(scores[d]))
 		
+# called when you type "reset" as Player 1's name. 
 def reset_scores():
 	scores.clear()
 
@@ -54,7 +64,6 @@ def save_move(p, c):
 	A[i][c] = symbol
 #	print('symbol = ', symbol)
 	return i
-
 
 def print_grid():
 	for i in range(8):
@@ -109,6 +118,97 @@ def is_game_over(r, c, player):
 def is_tie():
 	return (A[1][1] != '.') and (A[1][2] != '.') and (A[1][3] != '.') and (A[1][4] != '.') and (A[1][5] != '.') and (A[1][6] != '.') and (A[1][7] != '.')
 
+
+def save_draft_move(p, c):
+	symbol = ''
+	global A
+	if p == 1:
+		symbol = 'X'
+	else:
+		symbol = 'O'
+	i = 1
+	while True:
+		i += 1
+		if A[i][c] != '.':
+			i -= 1
+			break
+		if i == 7:
+			break
+#	print('A[', i, '][', c, '] = ', A[i][c])
+	A[i][c] = symbol
+#	print('symbol = ', symbol)
+	return r
+
+
+def find_cpu_move():
+	count = [0,0,0,0,0,0,0,0]
+	n = 0
+	global A
+	A_og = copy.deepcopy(A)
+	if dif_level == "EASY":
+		n = 100
+	elif dif_level == "NORMAL":
+		n = 400
+	elif dif_level == "HARD":
+		n = 600
+	elif dif_level == "CRUSHING":
+		n = 1000
+
+	for i in range(1,8):
+#		print("i=", i)
+		print(25*"\n" + "Thinking" + (i%3 + 1)*"." + "\n")
+		for j in range(n):
+#			print("    j=", j)
+			p = 2 # player; 1 for human, 2 for computer
+			A = copy.deepcopy(A_og)
+			c = i # the i-th column is selected as first CPU move. Then in the while-block we examine if that move was good
+			if A[1][c] != '.':
+				count[i] = -10000 # this column is already full, so you can't play there
+				break
+			r = save_draft_move(p,c)
+			winner = "NULL"
+			moves = 1;
+			p = 1 
+			while winner == "NULL":
+				c = int(7*random.random() + 1)
+				while A[1][c] != '.':
+					c = int(7*random.random() + 1)
+				r = save_draft_move(p,c)
+
+				if is_game_over(r,c,p):
+					winner = p
+					if winner == 2:
+						count[i] += 1
+						if moves == 1:
+							count[i] += 99
+					elif moves == 2:
+						count[i] -= 99
+#					print("        winner = ", winner)
+#					print_grid()
+					break
+				elif is_tie():
+					winner = 0;
+					count[i] += 0.5
+#					print("   tie")
+#					print_grid()
+					break
+#				print("     c = ", c)
+#				print_grid()
+				
+				p = change_turns(p)
+				moves += 1
+
+	maxv = -1; maxi = "NULL"
+	for i in range(1, len(count)):
+		if count[i] > maxv:
+			maxv = count[i]; maxi = i
+
+	print(count)
+	A = copy.deepcopy(A_og)
+	return maxi
+
+				
+
 playing = True
 winner = 0; loser = 0
 
@@ -127,30 +227,58 @@ while playing:
 		update_scoreboard()
 		continue
 	names[2] = input('Player 2, type your name (no spaces)\n')
+	if names[2] == "CPU":
+		vs_computer = True
+		print("Please select the difficulty level:")
+		print("1. Easy")
+		print("2. Normal")
+		print("3. Hard")
+		print("4. Crushing")
+		a = input()
+		if a == "1":
+			dif_level = "EASY"
+		elif a == "2":
+			dif_level = "NORMAL"
+		elif a == "3":
+			dif_level = "HARD"
+		elif a == "4":
+			dif_level = "CRUSHING"
+		names[2] += "_" + dif_level.lower();
 	
 	player = 1
 	
 	while True:
 		print(20*'\n')
-		print_grid()
-		s = names[player] 
-		if player == 1:
-			s += ' (X) '
-		else:
-			s += ' (O) '
-		s += 'choose a column '
-		c = input(s)
-		flag = False
-		if c.isnumeric():
-			c = int(c)
-			if c < 8 and c > 0 and A[1][c] == '.':
-				flag = True
-		while flag == False:
+
+		if player == 1 or (player == 2 and vs_computer == False):
+			print_grid()
+			if player == 1 and vs_computer == True:
+				try:
+					c = str(c)
+				except:
+					print()
+				else:
+					print("The computer has played in the column", c)
+			s = names[player] 
+			if player == 1:
+				s += ' (X) '
+			else:
+				s += ' (O) '
+			s += 'choose a column '
+			c = input(s)
+			flag = False
+			if c.isnumeric():
+				c = int(c)
+				if c < 8 and c > 0 and A[1][c] == '.':
+					flag = True
+			while flag == False:
 				c = input('Invalid choice, please pick again ')
 				if c.isnumeric():
 					c = int(c)
 					if c < 8 and c > 0 and A[1][c] == '.':
 						flag = True
+		else: 
+			c = find_cpu_move()
 		
 		r = save_move(player, c)
 		if is_game_over(r,c, player):
@@ -175,7 +303,7 @@ while playing:
 			scores[names[2]] += 0.5
 		else:
 			scores[names[2]] = 0.5
-	else:
+	else: # TO BE EDITED FOR LOSS AGAINST CPU
 		print('Congratulations,', names[winner], '! You won!')
 		if names[winner] in scores:
 			scores[names[winner]] += 1
