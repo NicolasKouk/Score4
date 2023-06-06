@@ -12,3 +12,6 @@ Scoreboard is updated after each game (1 point for winning, 0.5 point for drawin
 - To reset the scoreboard, type reset for the player 1 name.
 
 Have fun!
+
+![score4 sample](assets/score4_sample.jpg)
+
