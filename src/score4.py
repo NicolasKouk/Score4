@@ -303,14 +303,18 @@ while playing:
 			scores[names[2]] += 0.5
 		else:
 			scores[names[2]] = 0.5
-	else: # TO BE EDITED FOR LOSS AGAINST CPU
-		print('Congratulations,', names[winner], '! You won!')
-		if names[winner] in scores:
-			scores[names[winner]] += 1
+	else: 
+		if vs_computer == True and winner == 2:
+			print("The computer has played in the column", c)
+			print('You lose... ', names[winner], 'is the winnner!')
 		else:
-			scores[names[winner]] = 1
+			print('Congratulations,', names[winner], '! You won!')
+		if names[winner] in scores:
+			scores[names[winner]] += 1.0
+		else:
+			scores[names[winner]] = 1.0
 		if names[loser] not in scores:
-			scores[names[loser]] = 0
+			scores[names[loser]] = 0.0
 	
 	update_scoreboard()
 	ans = input('If you want to play again, type 1\n')
