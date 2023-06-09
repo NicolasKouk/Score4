@@ -220,13 +220,20 @@ while playing:
 	names = [0,0,0]
 	print(30*'\n')
 	print_scoreboard()
-	print(3*"\n")
+	if scores != {}:
+		print("\nTo reset the scoreboard, type reset\n\n")
+	else:
+		print(3*"\n")
 	names[1] = input('Player 1, type your name (no spaces)\n')
 	if names[1] == 'reset':
 		reset_scores()
 		update_scoreboard()
 		continue
-	names[2] = input('Player 2, type your name (no spaces)\n')
+	names[2] = input('Player 2, type your name (no spaces)\nIf you want to play against the computer, type CPU\n')
+	if names[2] == 'reset':
+		reset_scores()
+		update_scoreboard()
+		continue
 	if names[2] == "CPU":
 		vs_computer = True
 		print("Please select the difficulty level:")
@@ -248,7 +255,7 @@ while playing:
 	player = 1
 	
 	while True:
-		print(20*'\n')
+		print(30*'\n')
 
 		if player == 1 or (player == 2 and vs_computer == False):
 			print_grid()
@@ -290,7 +297,7 @@ while playing:
 			break
 		player = change_turns(player)
 			
-	print(20*'\n')
+	print(30*'\n')
 	print_grid()
 	
 	if (winner == 0):
