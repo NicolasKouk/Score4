@@ -220,13 +220,20 @@ while playing:
 	names = [0,0,0]
 	print(30*'\n')
 	print_scoreboard()
-	print(3*"\n")
+	if scores != {}:
+		print("\nTo reset the scoreboard, type reset\n\n")
+	else:
+		print(3*"\n")
 	names[1] = input('Player 1, type your name (no spaces)\n')
 	if names[1] == 'reset':
 		reset_scores()
 		update_scoreboard()
 		continue
-	names[2] = input('Player 2, type your name (no spaces)\n')
+	names[2] = input('Player 2, type your name (no spaces)\nIf you want to play against the computer, type CPU\n')
+	if names[2] == 'reset':
+		reset_scores()
+		update_scoreboard()
+		continue
 	if names[2] == "CPU":
 		vs_computer = True
 		print("Please select the difficulty level:")
@@ -235,25 +242,26 @@ while playing:
 		print("3. Hard")
 		print("4. Crushing")
 		a = input()
-		if a == "1":
+		if a == "1" or a.upper() == "EASY":
 			dif_level = "EASY"
-		elif a == "2":
+		elif a == "2" or a.upper() == "NORMAL":
 			dif_level = "NORMAL"
-		elif a == "3":
+		elif a == "3" or a.upper() == "HARD":
 			dif_level = "HARD"
-		elif a == "4":
+		elif a == "4" or a.upper() == "CRUSHING":
 			dif_level = "CRUSHING"
 		names[2] += "_" + dif_level.lower();
 	
 	player = 1
 	
 	while True:
-		print(20*'\n')
+		print(30*'\n')
 
 		if player == 1 or (player == 2 and vs_computer == False):
 			print_grid()
 			if player == 1 and vs_computer == True:
 				try:
+					c = int(c)
 					c = str(c)
 				except:
 					print()
@@ -290,7 +298,7 @@ while playing:
 			break
 		player = change_turns(player)
 			
-	print(20*'\n')
+	print(30*'\n')
 	print_grid()
 	
 	if (winner == 0):
@@ -322,5 +330,8 @@ while playing:
 		playing = False
 	else:
 		A = [['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.']]
+		vs_computer = False
+		dif_level = "NONE"
+		c = "foo" # just sth that leads to an exception in the try block
 	
 	
