@@ -13,5 +13,5 @@ Scoreboard is updated after each game (1 point for winning, 0.5 point for drawin
 
 Have fun!
 
-![score4 sample](assets/score4_sample.jpg)
+![score4 sample](assets/score4_sample2.jpg)
 
