@@ -8,7 +8,7 @@ Scoreboard is updated after each game (1 point for winning, 0.5 point for drawin
 
 ## Tips
 - No spaces in the players' names.
-- To play against the computer, type `CPU` for the player 2 name and then select the difficulty level.
+- To play against the computer AI, type `CPU` for the player 2 name and then select the difficulty level.
 - To reset the scoreboard, type `reset` for the player 1 name.
 
 Have fun!
