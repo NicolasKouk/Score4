@@ -1,7 +1,7 @@
 import random 
 import copy
 
-A = [['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.']]
+A = [['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.']]
 scores = {}
 
 vs_computer = False; dif_level = "NONE"
@@ -58,7 +58,7 @@ def save_move(p, c):
 		if A[i][c] != '.':
 			i -= 1
 			break
-		if i == 7:
+		if i == 6:
 			break
 #	print('A[', i, '][', c, '] = ', A[i][c])
 	A[i][c] = symbol
@@ -66,7 +66,7 @@ def save_move(p, c):
 	return i
 
 def print_grid():
-	for i in range(8):
+	for i in range(7):
 		print('', end = ' ')
 		for j in range(8):
 			if i>0 and j>0:
@@ -89,7 +89,7 @@ def is_game_over(r, c, player):
 		return True
 
 	# vertical check
-	for i in range(8):
+	for i in range(7):
 		v += A[i][c]
 	if (strike in v):
 		return True
@@ -98,7 +98,7 @@ def is_game_over(r, c, player):
 	d1_possible = [(r-6,c-6), (r-5,c-5), (r-4,c-4), (r-3,c-3), (r-2,c-2), (r-1,c-1),
 				(r,c), (r+1,c+1), (r+2,c+2), (r+3,c+3), (r+4,c+4), (r+5,c+5), (r+6,c+6)]
 	for i in range(len(d1_possible)):
-		if(d1_possible[i][0] < 8 and d1_possible[i][0] > 0 and d1_possible[i][1] < 8 and d1_possible[i][1] > 0):
+		if(d1_possible[i][0] < 7 and d1_possible[i][0] > 0 and d1_possible[i][1] < 8 and d1_possible[i][1] > 0):
 			d1 += A[d1_possible[i][0]][d1_possible[i][1]]
 	if (strike in d1):
 		return True
@@ -108,7 +108,7 @@ def is_game_over(r, c, player):
 	d2_possible = [(r+6,c-6), (r+5,c-5), (r+4,c-4), (r+3,c-3), (r+2,c-2), (r+1,c-1),
 				(r,c), (r-1,c+1), (r-2,c+2), (r-3,c+3), (r-4,c+4), (r-5,c+5), (r-6,c+6)]
 	for i in range(len(d2_possible)):
-		if(d2_possible[i][0] < 8 and d2_possible[i][0] > 0 and d2_possible[i][1] < 8 and d2_possible[i][1] > 0):
+		if(d2_possible[i][0] < 7 and d2_possible[i][0] > 0 and d2_possible[i][1] < 8 and d2_possible[i][1] > 0):
 			d2 += A[d2_possible[i][0]][d2_possible[i][1]]
 	if (strike in d2):
 		return True
@@ -132,12 +132,12 @@ def save_draft_move(p, c):
 		if A[i][c] != '.':
 			i -= 1
 			break
-		if i == 7:
+		if i == 6:
 			break
 #	print('A[', i, '][', c, '] = ', A[i][c])
 	A[i][c] = symbol
 #	print('symbol = ', symbol)
-	return r
+	return i
 
 
 def find_cpu_move():
@@ -329,7 +329,7 @@ while playing:
 	if ans != '1':
 		playing = False
 	else:
-		A = [['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.']]
+		A = [['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.'], ['.','.','.','.','.','.','.','.']]
 		vs_computer = False
 		dif_level = "NONE"
 		c = "foo" # just sth that leads to an exception in the try block
